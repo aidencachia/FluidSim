@@ -50,13 +50,14 @@ namespace appSpace{
         }
         
         vkDeviceWaitIdle(device.device());
-        swapChain = nullptr;l
+        swapChain = nullptr;
         swapChain = std::make_unique<graphics::SwapChain>(device, extent);
         createPipeline();
     }
     
     void App::createPipeline() {
-        auto pipelineConfig = graphics::Pipeline::defaultPipelineConfigInfo(swapChain->width(), swapChain->height());
+        graphics::PipelineConfigInfo pipelineConfig{};
+        graphics::Pipeline::defaultPipelineConfigInfo(pipelineConfig);
         pipelineConfig.renderPass = swapChain->getRenderPass();
         pipelineConfig.pipelineLayout = pipelineLayout;
         pipeline = std::make_unique<graphics::Pipeline>(device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
@@ -102,6 +103,17 @@ namespace appSpace{
         
         vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
         
+        VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = static_cast<float>(swapChain->getSwapChainExtent().width);
+        viewport.height = static_cast<float>(swapChain->getSwapChainExtent().height);
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+        VkRect2D scissor{{0, 0}, swapChain->getSwapChainExtent()};
+        vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
+        vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
+        
         pipeline->bind(commandBuffers[imageIndex]);
         model->bind(commandBuffers[imageIndex]);
         model->draw(commandBuffers[imageIndex]);
@@ -140,7 +152,7 @@ namespace appSpace{
             std::vector<graphics::Model::Vertex> &vertices,
             float length,
             std::vector<float> corner) {
-        float aspectRatio =(float) WIDTH/HEIGHT;
+        float aspectRatio = swapChain == nullptr ? WIDTH/HEIGHT :(float) swapChain->width()/swapChain->height();
         
         float x = corner[0];
         float y = corner[1];
