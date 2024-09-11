@@ -50,12 +50,23 @@ namespace appSpace{
         }
         
         vkDeviceWaitIdle(device.device());
-        swapChain = nullptr;
-        swapChain = std::make_unique<graphics::SwapChain>(device, extent);
+        if(swapChain = nullptr){
+            swapChain = std::make_unique<graphics::SwapChain>(device, extent);
+        } else {
+            swapChain = std::make_unique<graphics::SwapChain>(device, extent, std::move(swapChain));
+            if(swapChain->imageCount() != commandBuffers.size()){
+                if(commandBuffers.size() > 0)
+                    freeCommandBuffers();
+                createCommandBuffers();
+            }
+        }
         createPipeline();
     }
     
     void App::createPipeline() {
+        assert(swapChain != nullptr && "Cannot create pipeline before swap chain");
+        assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
+        
         graphics::PipelineConfigInfo pipelineConfig{};
         graphics::Pipeline::defaultPipelineConfigInfo(pipelineConfig);
         pipelineConfig.renderPass = swapChain->getRenderPass();
@@ -77,6 +88,11 @@ namespace appSpace{
             throw std::runtime_error("failed to allocate command buffers!");
         }
         
+    }
+    
+    void App::freeCommandBuffers() {
+        vkFreeCommandBuffers(device.device(), device.getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+        commandBuffers.clear();
     }
  
     void App::recordCommandBuffer(int imageIndex) {
