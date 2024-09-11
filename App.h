@@ -7,7 +7,19 @@
 #include "Graphics/SwapChain.h"
 #include "Graphics/Model.h"
 
+
+#define GLM_FORCE_REDIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include "glm/glm.hpp"
+
+
 namespace appSpace{
+    
+    struct SimplePushConstantData{
+        glm::vec2 offset;
+        alignas(16) glm::vec3 color;
+    };
+    
     class App{
     
     public:
