@@ -11,11 +11,13 @@
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/glm.hpp"
+#include "Graphics/GameObject.h"
 
 
 namespace appSpace{
     
     struct SimplePushConstantData{
+        glm::mat2 transform{1.0f};
         glm::vec2 offset;
         alignas(16) glm::vec3 color;
     };
@@ -34,7 +36,7 @@ namespace appSpace{
         
         void run();
     private:
-        void loadModels();
+        void loadGameObjects();
         void createPipelineLayout();
         void createPipeline();
         void createCommandBuffers();
@@ -42,6 +44,7 @@ namespace appSpace{
         void drawFrame();
         void recreateSwapChain();
         void recordCommandBuffer(int imageIndex);
+        void renderGameObjects(VkCommandBuffer commandBuffer);
         
         graphics::Window window{WIDTH, HEIGHT, "HIIII"};
         graphics::Device device{window};
@@ -49,7 +52,7 @@ namespace appSpace{
         std::unique_ptr<graphics::Pipeline> pipeline;
         VkPipelineLayout pipelineLayout;
         std::vector<VkCommandBuffer> commandBuffers;
-        std::unique_ptr<graphics::Model> model;
+        std::vector<graphics::GameObject> gameObjects;
         
         void addSquareFromTLCorner(std::vector<graphics::Model::Vertex> &vertices, float length, std::vector<float> corner);
     };
