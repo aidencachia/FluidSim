@@ -1,8 +1,41 @@
 #include <array>
+#include <chrono>
+#include <iostream>
 #include "App.h"
 #include "glm/gtc/constants.hpp"
 
 namespace appSpace{
+    
+    
+    std::unique_ptr<graphics::Model> createCircleModel(graphics::Device& device, unsigned int numSides) {
+        std::vector<graphics::Model::Vertex> uniqueVertices{};
+        for (int i = 0; i < numSides; i++) {
+            float angle = i * glm::two_pi<float>() / numSides;
+            uniqueVertices.push_back({{glm::cos(angle), glm::sin(angle)}});
+        }
+        uniqueVertices.push_back({});  // adds center vertex at 0, 0
+        
+        std::vector<graphics::Model::Vertex> vertices{};
+        for (int i = 0; i < numSides; i++) {
+            vertices.push_back(uniqueVertices[i]);
+            vertices.push_back(uniqueVertices[(i + 1) % numSides]);
+            vertices.push_back(uniqueVertices[numSides]);
+        }
+        return std::make_unique<graphics::Model>(device, vertices);
+    }
+    
+    void updateRigidbodies(std::vector<graphics::GameObject>& objects, std::chrono::milliseconds deltaTime){
+        for (auto iterator = objects.begin(); iterator != objects.end() ; ++iterator) {
+            auto& obj = *iterator;
+            glm::vec2 finalVelocity{0, obj.rigidBody2d.velocity.y + App::GRAVITY * deltaTime.count()/1000};
+            obj.rigidBody2d.velocity = finalVelocity;
+            obj.transform2d.translation +=  static_cast<float>(deltaTime.count())/1000 * obj.rigidBody2d.velocity;
+            
+            std::cout << "finalVelocity: " << finalVelocity.y << std::endl;
+        }
+    }
+    
+    
     
     App::App() {
         loadGameObjects();
@@ -11,13 +44,27 @@ namespace appSpace{
     App::~App() {}
     
     void App::run() {
+        std::shared_ptr<graphics::Model> circleModel = createCircleModel(device, 64);
+        std::vector<graphics::GameObject> physicsObjects{};
+        auto red = graphics::GameObject::createGameObject();
+        red.transform2d.scale = glm::vec2{.2};
+        red.transform2d.translation = {.0, -.5};
+        red.color = {1.f, 0.f, 0.f};
+        red.rigidBody2d.velocity = {.0f, .0f};
+        red.model = circleModel;
+        physicsObjects.push_back(std::move(red));
+        
         graphics::FirstRenderSystem renderSystem{device, renderer.getSwapChainRenderPass()};
         
+        
+        auto prevTime = std::chrono::system_clock::now();
         while (!window.shouldClose()) {
             glfwPollEvents();
             if(auto commandBuffer = renderer.beginFrame()){
+                updateRigidbodies(physicsObjects, std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - prevTime));
+                
                 renderer.beginSwapChainRenderPass(commandBuffer);
-                renderSystem.renderGameObjects(commandBuffer, gameObjects);
+                renderSystem.renderGameObjects(commandBuffer, physicsObjects);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();
             }
