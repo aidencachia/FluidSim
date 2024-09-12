@@ -176,9 +176,9 @@ namespace graphics {
         
         createInfo.oldSwapchain = oldSwapChain == nullptr ? VK_NULL_HANDLE : oldSwapChain->swapChain;
         
-        createInfo.oldSwapchain = VK_NULL_HANDLE;
+        auto status = vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain);
         
-        if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
+        if (status != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");
         }
         
@@ -303,6 +303,7 @@ namespace graphics {
     
     void SwapChain::createDepthResources() {
         VkFormat depthFormat = findDepthFormat();
+        swapChainDepthFormat = depthFormat;
         VkExtent2D swapChainExtent = getSwapChainExtent();
         
         depthImages.resize(imageCount());

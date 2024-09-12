@@ -1,0 +1,45 @@
+#pragma once
+
+#include <memory>
+#include "../Pipeline.h"
+#include "../Device.h"
+#include "../Model.h"
+#include "../GameObject.h"
+
+#define GLM_FORCE_REDIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include "glm/glm.hpp"
+
+
+namespace graphics{
+    
+    struct SimplePushConstantData{
+        glm::mat2 transform{1.0f};
+        glm::vec2 offset;
+        alignas(16) glm::vec3 color;
+    };
+    
+    class FirstRenderSystem{
+    
+    public:
+        
+        FirstRenderSystem(Device& device, VkRenderPass renderPass);
+        ~FirstRenderSystem();
+        
+        FirstRenderSystem(const FirstRenderSystem &) = delete;
+        FirstRenderSystem &operator=(const FirstRenderSystem &) = delete;
+        
+        void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects);
+        
+        void run();
+    private:
+        void loadGameObjects();
+        void createPipelineLayout();
+        void createPipeline(VkRenderPass renderPass);
+        
+        Device& device;
+        
+        std::unique_ptr<graphics::Pipeline> pipeline;
+        VkPipelineLayout pipelineLayout;
+    };
+}
