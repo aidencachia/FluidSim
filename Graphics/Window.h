@@ -21,6 +21,7 @@ public:
     void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
     
     void resetWindowResizedFlag() { framebufferResized = false; }
+    GLFWwindow* getGLFWwindow(){ return window; }
 
 private:
     static void framebufferResizeCallback(GLFWwindow *window, int width, int height);

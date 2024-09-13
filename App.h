@@ -7,6 +7,7 @@
 #include "Graphics/Model.h"
 #include "Graphics/RenderSystems/FirstRenderSystem.h"
 #include "Graphics/GameObject.h"
+#include "Graphics/InputController.h"
 
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -20,7 +21,7 @@ namespace appSpace{
     public:
         static constexpr int WIDTH = 800;
         static constexpr int HEIGHT = 800;
-        static constexpr int GRAVITY = 100;
+        static constexpr int GRAVITY = 10;
         
         App();
         ~App();
@@ -29,6 +30,11 @@ namespace appSpace{
         App &operator=(const App &) = delete;
         
         void run();
+        void reset();
+        void pause();
+        
+        void registerInput();
+        
     private:
         void loadGameObjects();
         
@@ -37,5 +43,9 @@ namespace appSpace{
         graphics::Renderer renderer{window, device};
         
         std::vector<graphics::GameObject> gameObjects;
+        
+        graphics::InputController input{};
+        
+        bool isPaused{};
     };
 }

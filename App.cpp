@@ -21,13 +21,18 @@ namespace appSpace{
         while (!window.shouldClose()) {
             glfwPollEvents();
             if(auto commandBuffer = renderer.beginFrame()){
+                
+                registerInput(); // placed here because of pause function;
+                
                 auto nextTime = std::chrono::high_resolution_clock::now();
+                
                 float deltaTimeSecs = std::chrono::duration<float, std::chrono::seconds::period>(nextTime- prevTime).count();
                 prevTime = nextTime;
-                for (graphics::GameObject& obj: gameObjects) {
-                    obj.update(deltaTimeSecs);
+                if(!isPaused) {
+                    for (graphics::GameObject &obj: gameObjects) {
+                        obj.update(deltaTimeSecs);
+                    }
                 }
-                
                 renderer.beginSwapChainRenderPass(commandBuffer);
                 renderSystem.renderGameObjects(commandBuffer, gameObjects);
                 renderer.endSwapChainRenderPass(commandBuffer);
@@ -48,6 +53,22 @@ namespace appSpace{
         red.rigidBody2d.velocity = {.001f, .0f};
         red.model = circleModel;
         gameObjects.push_back(std::move(red));
+    }
+    
+    void App::reset() {
+        vkDeviceWaitIdle(device.device());
+        gameObjects.clear();
+        loadGameObjects();
+    }
+    
+    void App::pause() {
+        isPaused = !isPaused;
+    }
+    
+    void App::registerInput(){
+        input.update(window.getGLFWwindow());
+        if(input.isToReset()) reset();
+        if(input.isToTogglePause()) pause();
     }
     
 }
