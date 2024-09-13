@@ -45,7 +45,7 @@ namespace graphics {
         std::shared_ptr<Model> model{};
         glm::vec3 color{};
         
-        void update(std::chrono::milliseconds deltaTime){ updateBehaviour(*this, deltaTime.count()); };
+        void update(float deltaTimeSecs){ updateBehaviour(*this, deltaTimeSecs); };
         
         Transform2dComponent transform2d{};
         RigidBody2dComponent rigidBody2d{};

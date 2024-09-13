@@ -17,13 +17,15 @@ namespace appSpace{
         graphics::FirstRenderSystem renderSystem{device, renderer.getSwapChainRenderPass()};
         
         
-        auto prevTime = std::chrono::system_clock::now();
+        auto prevTime = std::chrono::high_resolution_clock ::now();
         while (!window.shouldClose()) {
             glfwPollEvents();
             if(auto commandBuffer = renderer.beginFrame()){
-                
+                auto nextTime = std::chrono::high_resolution_clock::now();
+                float deltaTimeSecs = std::chrono::duration<float, std::chrono::seconds::period>(nextTime- prevTime).count();
+                prevTime = nextTime;
                 for (graphics::GameObject& obj: gameObjects) {
-                    obj.update(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - prevTime));
+                    obj.update(deltaTimeSecs);
                 }
                 
                 renderer.beginSwapChainRenderPass(commandBuffer);
