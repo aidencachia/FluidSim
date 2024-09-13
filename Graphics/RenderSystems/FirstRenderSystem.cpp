@@ -47,8 +47,6 @@ namespace graphics{
         pipeline->bind(commandBuffer);
         
         for(auto& obj: gameObjects) {
-            obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.001f, glm::two_pi<float>());
-            
             SimplePushConstantData push{};
             push.offset = obj.transform2d.translation;
             push.color = obj.color;
