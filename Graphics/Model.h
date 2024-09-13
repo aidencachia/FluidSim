@@ -1,10 +1,12 @@
 #pragma once
 
+#include <memory>
 #include "Device.h"
 
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/glm.hpp"
+#include "glm/gtc/constants.hpp"
 
 namespace graphics {
     class Model {
@@ -27,6 +29,10 @@ namespace graphics {
         void bind(VkCommandBuffer commandBuffer);
         void draw(VkCommandBuffer commandBuffer);
         
+        
+        static std::unique_ptr<graphics::Model> createCircleModel(graphics::Device& device, unsigned int numSides);
+    
+    
     private:
         void createVertexBuffers(const std::vector<Vertex> &vertices);
         

@@ -6,32 +6,6 @@
 
 namespace appSpace{
     
-    
-    std::unique_ptr<graphics::Model> createCircleModel(graphics::Device& device, unsigned int numSides) {
-        std::vector<graphics::Model::Vertex> uniqueVertices{};
-        for (int i = 0; i < numSides; i++) {
-            float angle = i * glm::two_pi<float>() / numSides;
-            uniqueVertices.push_back({{glm::cos(angle), glm::sin(angle)}});
-        }
-        uniqueVertices.push_back({});  // adds center vertex at 0, 0
-        
-        std::vector<graphics::Model::Vertex> vertices{};
-        for (int i = 0; i < numSides; i++) {
-            vertices.push_back(uniqueVertices[i]);
-            vertices.push_back(uniqueVertices[(i + 1) % numSides]);
-            vertices.push_back(uniqueVertices[numSides]);
-        }
-        return std::make_unique<graphics::Model>(device, vertices);
-    }
-    
-    void updateRigidbodies(std::vector<graphics::GameObject>& objects, std::chrono::milliseconds deltaTime){
-        for (graphics::GameObject& obj: objects) {
-            obj.update(deltaTime);
-        }
-    }
-    
-    
-    
     App::App() {
         loadGameObjects();
     }
@@ -39,7 +13,7 @@ namespace appSpace{
     App::~App() {}
     
     void App::run() {
-        std::shared_ptr<graphics::Model> circleModel = createCircleModel(device, 64);
+        std::shared_ptr<graphics::Model> circleModel = graphics::Model::createCircleModel(device, 64);
         std::vector<graphics::GameObject> physicsObjects{};
         auto red = graphics::GameObject::createRigidbodyObject();
         red.transform2d.scale = glm::vec2{.2};
@@ -56,7 +30,10 @@ namespace appSpace{
         while (!window.shouldClose()) {
             glfwPollEvents();
             if(auto commandBuffer = renderer.beginFrame()){
-                updateRigidbodies(physicsObjects, std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - prevTime));
+                
+                for (graphics::GameObject& obj: physicsObjects) {
+                    obj.update(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - prevTime));
+                }
                 
                 renderer.beginSwapChainRenderPass(commandBuffer);
                 renderSystem.renderGameObjects(commandBuffer, physicsObjects);
@@ -82,7 +59,6 @@ namespace appSpace{
         triangle.transform2d.translation.x = .2f;
         triangle.transform2d.scale = {2.f, .5f};
         triangle.transform2d.rotation = .25f * glm::two_pi<float>();
-        
         
         gameObjects.push_back(std::move(triangle));
     }

@@ -59,4 +59,22 @@ namespace graphics{
         attributeDescriptions[1].offset = offsetof(Vertex,color);
         return attributeDescriptions;
     }
+    
+    
+    std::unique_ptr<graphics::Model> Model::createCircleModel(graphics::Device& device, unsigned int numSides){
+        std::vector<graphics::Model::Vertex> uniqueVertices{};
+        for (int i = 0; i < numSides; i++) {
+        float angle = i * glm::two_pi<float>() / numSides;
+        uniqueVertices.push_back({{glm::cos(angle), glm::sin(angle)}});
+    }
+    uniqueVertices.push_back({});  // adds center vertex at 0, 0
+    
+    std::vector<graphics::Model::Vertex> vertices{};
+    for (int i = 0; i < numSides; i++) {
+    vertices.push_back(uniqueVertices[i]);
+    vertices.push_back(uniqueVertices[(i + 1) % numSides]);
+    vertices.push_back(uniqueVertices[numSides]);
+    }
+    return std::make_unique<graphics::Model>(device, vertices);
+    }
 }
