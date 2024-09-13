@@ -25,34 +25,8 @@ namespace appSpace{
     }
     
     void updateRigidbodies(std::vector<graphics::GameObject>& objects, std::chrono::milliseconds deltaTime){
-        for (auto iterator = objects.begin(); iterator != objects.end() ; ++iterator) {
-            auto& obj = *iterator;
-            glm::vec2 finalVelocity{obj.rigidBody2d.velocity.x, obj.rigidBody2d.velocity.y + App::GRAVITY * deltaTime.count()/1000};
-            obj.rigidBody2d.velocity = finalVelocity;
-            glm::vec2 translation = obj.transform2d.translation + static_cast<float>(deltaTime.count())/1000 * obj.rigidBody2d.velocity;
-            
-            if(abs(translation.y)+obj.transform2d.scale.y > 1){
-                if(abs(finalVelocity.y) > 0.00001) {
-                    obj.rigidBody2d.velocity.y *= -.80;
-                    translation = obj.transform2d.translation +
-                                  static_cast<float>(deltaTime.count()) / 1000 *
-                                  obj.rigidBody2d.velocity;
-                }
-                else{
-                    glm::vec2 newTranslation{translation.x, 1-obj.transform2d.scale.y};
-                    obj.rigidBody2d.velocity.y = 0;
-                    translation = newTranslation;
-                }
-            }
-            
-            if(abs(translation.x)+obj.transform2d.scale.x > 1){
-                obj.rigidBody2d.velocity.x *= -.90;
-                translation = obj.transform2d.translation + static_cast<float>(deltaTime.count())/1000 * obj.rigidBody2d.velocity;
-            }
-            
-            obj.transform2d.translation = translation;
-            obj.rigidBody2d.velocity.x *= 0.9995;
-            std::cout << "Velocity:\tX=" << obj.rigidBody2d.velocity.x << "\tY:" <<  obj.rigidBody2d.velocity.y << std::endl;
+        for (graphics::GameObject& obj: objects) {
+            obj.update(deltaTime);
         }
     }
     
@@ -67,7 +41,7 @@ namespace appSpace{
     void App::run() {
         std::shared_ptr<graphics::Model> circleModel = createCircleModel(device, 64);
         std::vector<graphics::GameObject> physicsObjects{};
-        auto red = graphics::GameObject::createGameObject();
+        auto red = graphics::GameObject::createRigidbodyObject();
         red.transform2d.scale = glm::vec2{.2};
         red.transform2d.translation = {.0, -.5};
         red.color = {1.f, 0.f, 0.f};

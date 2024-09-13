@@ -28,11 +28,11 @@ add_executable(Fluid_Sim main.cpp
         Graphics/SwapChain.h
         Graphics/Model.cpp
         Graphics/Model.h
-        Graphics/GameObject.cpp
         Graphics/GameObject.h
         Graphics/Renderer.h
         Graphics/Renderer.cpp
         Graphics/RenderSystems/FirstRenderSystem.cpp
-        Graphics/RenderSystems/FirstRenderSystem.h)
+        Graphics/RenderSystems/FirstRenderSystem.h
+        Graphics/GameObject.cpp)
 
 target_link_libraries(Fluid_Sim glfw glm ${Vulkan_LIBRARIES})

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <memory>
+#include <chrono>
 #include "glm/vec3.hpp"
 #include "Model.h"
 
 namespace graphics {
+    
     
     struct Transform2dComponent{
         glm::vec2 translation{};
@@ -28,11 +30,10 @@ namespace graphics {
     class GameObject{
     public:
         using id_t = unsigned int;
+        using UpdateBehaviour = std::function<void(GameObject&, float)>;
         
-        static GameObject createGameObject() {
-            static id_t currentId = 0;
-            return GameObject(currentId++);
-        }
+        static GameObject createGameObject();
+        static GameObject createRigidbodyObject();
         
         GameObject(const GameObject&) = delete;
         GameObject &operator=(const GameObject&) = delete;
@@ -44,13 +45,15 @@ namespace graphics {
         std::shared_ptr<Model> model{};
         glm::vec3 color{};
         
+        void update(std::chrono::milliseconds deltaTime){ updateBehaviour(*this, deltaTime.count()); };
+        
         Transform2dComponent transform2d{};
         RigidBody2dComponent rigidBody2d{};
         
     private:
-        GameObject(id_t objId) :id{objId} {}
-        
+        GameObject(id_t objId, UpdateBehaviour updateBehaviour):id{objId}, updateBehaviour{updateBehaviour} {}
+        UpdateBehaviour updateBehaviour;
         id_t id;
-    
     };
+    
 }
