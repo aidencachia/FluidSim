@@ -21,7 +21,7 @@ namespace appSpace{
     public:
         static constexpr int WIDTH = 800;
         static constexpr int HEIGHT = 800;
-        static constexpr int GRAVITY = 10;
+        static constexpr float GRAVITY = 9.81;
         
         App();
         ~App();
