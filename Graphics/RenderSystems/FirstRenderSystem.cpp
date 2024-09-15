@@ -50,7 +50,10 @@ namespace graphics{
             SimplePushConstantData push{};
             push.offset = obj.transform2d.translation;
             push.color = obj.color;
-            push.transform = obj.transform2d.mat2();
+            
+            glm::mat2 aspectRatioTransform{{1/device.getAspectRatio(),0},{0,1}};
+            
+            push.transform = obj.transform2d.mat2()*aspectRatioTransform;
             
             vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT |VK_SHADER_STAGE_FRAGMENT_BIT, 0 ,sizeof(SimplePushConstantData), &push);
             obj.model->bind(commandBuffer);

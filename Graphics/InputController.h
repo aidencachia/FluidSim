@@ -22,12 +22,21 @@ namespace graphics{
             resetPrev = reset;
             return flag;
         }
+        
         bool isToTogglePause(){
             bool flag = togglePause && !togglePausePrev;
             togglePausePrev = togglePause;
             return flag;
         }
         
+        bool isToDrag(){
+            return drag;
+        }
+        
+        bool isToStartDragging(){
+            bool flag = drag && !dragPrev;
+            return flag;
+        }
         void update(GLFWwindow* window);
         
         

@@ -34,17 +34,21 @@ namespace appSpace{
         void pause();
         
         void registerInput();
+        void dragObject();
         
     private:
         void loadGameObjects();
         
-        graphics::Window window{WIDTH, HEIGHT, "HIIII"};
+        graphics::Window window{WIDTH, HEIGHT, "Ball"};
         graphics::Device device{window};
         graphics::Renderer renderer{window, device};
         
         std::vector<graphics::GameObject> gameObjects;
         
         graphics::InputController input{};
+        
+        int objectIdToDrag;
+        glm::vec2 distanceFromCenter;
         
         bool isPaused{};
     };

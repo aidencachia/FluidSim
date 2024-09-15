@@ -30,7 +30,8 @@ namespace graphics {
         void draw(VkCommandBuffer commandBuffer);
         
         
-        static std::unique_ptr<graphics::Model> createCircleModel(graphics::Device& device, unsigned int numSides);
+        static std::unique_ptr<Model> createCircleModel(Device& device, unsigned int numSides);
+        static std::unique_ptr<Model> createRectangleModel(Device &device);
     
     
     private:
@@ -40,5 +41,6 @@ namespace graphics {
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
         uint32_t vertexCount;
+        
     };
 }

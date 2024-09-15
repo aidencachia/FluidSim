@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <chrono>
+#include <utility>
 #include "glm/vec3.hpp"
 #include "Model.h"
 
@@ -18,7 +19,7 @@ namespace graphics {
             const float c = glm::cos(rotation);
             glm::mat2 rotationMat{{c,s},{-s, c}};
             glm::mat2 scaleMat{{scale.x, .0}, {0.f, scale.y}};
-            return rotationMat* scaleMat;
+            return rotationMat * scaleMat;
         }
     };
     
@@ -35,6 +36,12 @@ namespace graphics {
         static GameObject createGameObject();
         static GameObject createRigidbodyObject();
         
+        static GameObject createLine(Device& device, glm::vec2 to, glm::vec2 from, float stroke);
+        static GameObject createLine(Device& device, GameObject& to, glm::vec2 from, float stroke);
+        static GameObject createLine(Device& device, glm::vec2 to, GameObject& from, float stroke);
+        static GameObject createLine(Device& device, GameObject& to, GameObject& from, float stroke);
+        
+        
         GameObject(const GameObject&) = delete;
         GameObject &operator=(const GameObject&) = delete;
         GameObject(GameObject &&) = default;
@@ -44,6 +51,9 @@ namespace graphics {
         
         std::shared_ptr<Model> model{};
         glm::vec3 color{};
+        std::function<bool(GameObject&, glm::vec2)> isInBoundingAreaFunc;
+        
+        bool isInBoundingArea(glm::vec2 coords){ return isInBoundingAreaFunc(*this, coords); }
         
         void update(float deltaTimeSecs){ updateBehaviour(*this, deltaTimeSecs); };
         
@@ -51,9 +61,15 @@ namespace graphics {
         RigidBody2dComponent rigidBody2d{};
         
     private:
-        GameObject(id_t objId, UpdateBehaviour updateBehaviour):id{objId}, updateBehaviour{updateBehaviour} {}
+        GameObject(id_t objId, UpdateBehaviour updateBehaviour):
+            id{objId},
+            updateBehaviour{std::move(updateBehaviour)} {}
+            
         UpdateBehaviour updateBehaviour;
         id_t id;
+        
+        GameObject* tracking1;
+        GameObject* tracking2;
     };
     
 }

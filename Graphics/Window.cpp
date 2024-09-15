@@ -37,4 +37,10 @@ namespace graphics{
         windowobj->height = height;
     }
     
+    glm::vec2 Window::getCursorPos() {
+        double x, y;
+        glfwGetCursorPos(window, &x, &y);
+        return {x/width*2-1, y/height*2-1};
+    }
+    
 }

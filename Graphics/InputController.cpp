@@ -1,3 +1,4 @@
+#include <iostream>
 #include "InputController.h"
 
 namespace graphics{
@@ -12,13 +13,14 @@ namespace graphics{
     }
     
     void InputController::checkDrag(GLFWwindow *window) {
-        if(glfwGetKey(window, keys.drag) == GLFW_PRESS) drag = true;
+        if(glfwGetMouseButton(window, keys.drag) == GLFW_PRESS) drag = true;
         else drag = false;
     }
     
     void InputController::update(GLFWwindow *window) {
         checkTogglePause(window);
         checkReset(window);
+        dragPrev = drag;
         checkDrag(window);
     }
 }

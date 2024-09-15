@@ -5,6 +5,7 @@
 
 #include <string>
 #include "GLFW/glfw3.h"
+#include "glm/vec2.hpp"
 
 namespace graphics{
 
@@ -21,7 +22,12 @@ public:
     void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
     
     void resetWindowResizedFlag() { framebufferResized = false; }
+    
+    glm::vec2 getCursorPos();
+    
     GLFWwindow* getGLFWwindow(){ return window; }
+    
+    float getAspectRatio() const{ return ((float) width)/height; }
 
 private:
     static void framebufferResizeCallback(GLFWwindow *window, int width, int height);

@@ -71,6 +71,8 @@ namespace graphics {
                 VkDeviceMemory &imageMemory);
         
         VkPhysicalDeviceProperties properties;
+        
+        float getAspectRatio(){ return window.getAspectRatio(); }
     
     private:
         void createInstance();
