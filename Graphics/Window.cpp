@@ -37,10 +37,17 @@ namespace graphics{
         windowobj->height = height;
     }
     
-    glm::vec2 Window::getCursorPos() {
-        double x, y;
-        glfwGetCursorPos(window, &x, &y);
-        return {x/width*2-1, y/height*2-1};
+    glm::vec2 Window::getCursorPos() {glm::vec2 Window::getCursorPos() {
+            double x, y;
+            glfwGetCursorPos(window, &x, &y);
+
+            // Get the framebuffer size (in pixels)
+            int fbWidth, fbHeight;
+            glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+
+            // Adjust the cursor position according to framebuffer size
+            return {x / fbWidth * 2 - 1, y / fbHeight * 2 - 1};
+        }
     }
     
 }
