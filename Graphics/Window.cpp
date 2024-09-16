@@ -40,7 +40,11 @@ namespace graphics{
     glm::vec2 Window::getCursorPos() {
         double x, y;
         glfwGetCursorPos(window, &x, &y);
-        return {x/width*2-1, y/height*2-1};
+
+        int winWidth, winHeight;
+        glfwGetWindowSize(window, &winWidth, &winHeight);
+
+        return {x/winWidth*2-1, y/winHeight*2-1};
     }
     
 }
