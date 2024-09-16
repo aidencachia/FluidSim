@@ -62,10 +62,10 @@ namespace appSpace{
         ball.transform2d.translation.y = -0.5f;
         gameObjects.push_back(std::move(ball));
 
-        auto line = graphics::GameObject::createLine(device, ball, {0,0}, 1);
-        line.color = {1.f, 1.f, 1.f};
-
-        gameObjects.push_back(std::move(line));
+//        auto line = graphics::GameObject::createLine(device, ball, {0,0}, 1);
+//        line.color = {1.f, 1.f, 1.f};
+//
+//        gameObjects.push_back(std::move(line));
         
     }
     
@@ -106,7 +106,7 @@ namespace appSpace{
             
             glm::vec2 newDistance{deltaX, deltaY};
             
-            gameObjects[objectIdToDrag].rigidBody2d.velocity += (newDistance-distanceFromCenter)*glm::vec2{0.05};
+            gameObjects[objectIdToDrag].rigidBody2d.velocity += (newDistance-distanceFromCenter)*glm::vec2{2};
         }
     }
     
