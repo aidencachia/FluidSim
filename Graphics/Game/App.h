@@ -1,13 +1,13 @@
 #pragma once
 
 #include <memory>
-#include "Graphics/Window.h"
-#include "Graphics/Device.h"
-#include "Graphics/Renderer.h"
-#include "Graphics/Model.h"
-#include "Graphics/RenderSystems/FirstRenderSystem.h"
-#include "Graphics/GameObject.h"
-#include "Graphics/InputController.h"
+#include "../Window.h"
+#include "../Device.h"
+#include "../Renderer.h"
+#include "../Model.h"
+#include "../RenderSystems/FirstRenderSystem.h"
+#include "GameObject.h"
+#include "../InputController.h"
 
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -43,7 +43,7 @@ namespace appSpace{
         graphics::Device device{window};
         graphics::Renderer renderer{window, device};
         
-        std::vector<graphics::GameObject> gameObjects;
+        std::vector<graphics::gameSpace::GameObject> gameObjects;
         
         graphics::InputController input{};
         

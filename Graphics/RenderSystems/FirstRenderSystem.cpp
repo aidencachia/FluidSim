@@ -1,6 +1,7 @@
 #include <array>
 #include "FirstRenderSystem.h"
 #include "glm/gtc/constants.hpp"
+#include "GameObject.h"
 
 namespace graphics{
     
@@ -43,7 +44,7 @@ namespace graphics{
         
     }
     
-    void FirstRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects) {
+    void FirstRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<gameSpace::GameObject>& gameObjects) {
         pipeline->bind(commandBuffer);
         
         for(auto& obj: gameObjects) {

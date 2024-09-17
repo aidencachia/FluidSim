@@ -1,9 +1,9 @@
 #include "GameObject.h"
-#include "../App.h"
+#include "App.h"
 namespace graphics {
     
     
-    void updateLine(GameObject& line, glm::vec2 to, glm::vec2 from){
+    void updateLine(gameSpace::GameObject& line, glm::vec2 to, glm::vec2 from){
         float deltaX = from.x - to.x;
         float deltaY = from.y - to.y;
         float distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
@@ -20,10 +20,10 @@ namespace graphics {
         line.transform2d.rotation = theta;
     }
     
-    void updateRigidbody(GameObject obj, float deltaTimeMillis){
+    void updateRigidbody(gameSpace::GameObject obj, float deltaTimeMillis){
     }
     
-    GameObject GameObject::createGameObject(){
+    gameSpace::GameObject gameSpace::GameObject::createGameObject(){
         static id_t currentId = 0;
         GameObject obj{currentId++, [](GameObject& obj, float) { }};
         obj.isInBoundingAreaFunc = [](GameObject&, glm::vec2){
@@ -32,7 +32,7 @@ namespace graphics {
         return obj;
     }
     
-    GameObject GameObject::createRigidbodyObject(){
+    gameSpace::GameObject gameSpace::GameObject::createRigidbodyObject(){
         static id_t currentId = 0;
         return {currentId++, [](GameObject& obj, float deltaTimeSecs) {
             
@@ -65,8 +65,8 @@ namespace graphics {
         }};
     }
     
-    GameObject GameObject::createLine(Device& device, glm::vec2 to, glm::vec2 from,
-                                      float stroke) {
+    gameSpace::GameObject gameSpace::GameObject::createLine(Device& device, glm::vec2 to, glm::vec2 from,
+                                                            float stroke) {
         GameObject line = createGameObject();
         line.model = Model::createRectangleModel(device);
         line.transform2d.scale.y = 0.0025f * stroke;
@@ -76,8 +76,8 @@ namespace graphics {
         return line;
     }
     
-    GameObject GameObject::createLine(Device &device, glm::vec2 to,
-                                      GameObject &from, float stroke) {
+    gameSpace::GameObject gameSpace::GameObject::createLine(Device &device, glm::vec2 to,
+                                                            GameObject &from, float stroke) {
         GameObject line = createLine(device, to, from.transform2d.translation+from.transform2d.scale, stroke);
         line.tracking1 = &from;
         line.updateBehaviour = [to](GameObject& gameObject, float deltaTimeSecs){
@@ -86,9 +86,9 @@ namespace graphics {
         return line;
     }
     
-    GameObject GameObject::createLine(graphics::Device &device,
-                                      graphics::GameObject &to, glm::vec2 from,
-                                      float stroke) {
+    gameSpace::GameObject gameSpace::GameObject::createLine(graphics::Device &device,
+                                                            graphics::gameSpace::GameObject &to, glm::vec2 from,
+                                                            float stroke) {
         return GameObject::createLine(device, from, to, stroke);
     }
 
