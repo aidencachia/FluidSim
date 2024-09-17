@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Graphics/Game/App.h"
+#include "Game/App.h"
 
 int main() {
     appSpace::App app{};

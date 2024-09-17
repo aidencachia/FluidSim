@@ -16,8 +16,7 @@ namespace appSpace{
     void App::run() {
         
         graphics::FirstRenderSystem renderSystem{device, renderer.getSwapChainRenderPass()};
-        
-        
+
         auto prevTime = std::chrono::high_resolution_clock::now();
         while (!window.shouldClose()) {
             glfwPollEvents();

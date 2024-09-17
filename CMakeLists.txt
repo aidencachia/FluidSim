@@ -18,8 +18,8 @@ endif ()
 add_executable(Fluid_Sim main.cpp
         Graphics/Window.cpp
         Graphics/Window.h
-        Graphics/Game/App.cpp
-        Graphics/Game/App.h
+        Game/App.cpp
+        Game/App.h
         Graphics/Pipeline.cpp
         Graphics/Pipeline.h
         Graphics/Device.cpp
@@ -28,12 +28,12 @@ add_executable(Fluid_Sim main.cpp
         Graphics/SwapChain.h
         Graphics/Model.cpp
         Graphics/Model.h
-        Graphics/Game/GameObject.h
+        Game/GameObject.h
         Graphics/Renderer.h
         Graphics/Renderer.cpp
         Graphics/RenderSystems/FirstRenderSystem.cpp
         Graphics/RenderSystems/FirstRenderSystem.h
-        Graphics/Game/GameObject.cpp
+        Game/GameObject.cpp
         Graphics/InputController.cpp
         Graphics/InputController.h)
 
