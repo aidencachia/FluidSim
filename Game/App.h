@@ -6,15 +6,15 @@
 #include "../Graphics/Renderer.h"
 #include "../Graphics/Model.h"
 #include "../Graphics/RenderSystems/FirstRenderSystem.h"
-#include "GameObject.h"
-#include "../Graphics/InputController.h"
+#include "Objects/GameObject.h"
+#include "InputController.h"
 
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/glm.hpp"
 
 
-namespace appSpace{
+namespace FluidSim{
     
     class App{
     
@@ -43,7 +43,7 @@ namespace appSpace{
         graphics::Device device{window};
         graphics::Renderer renderer{window, device};
         
-        std::vector<graphics::appSpace::GameObject> gameObjects;
+        std::vector<FluidSim::GameObject> gameObjects;
         
         graphics::InputController input{};
         

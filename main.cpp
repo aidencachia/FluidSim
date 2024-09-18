@@ -2,7 +2,7 @@
 #include "Game/App.h"
 
 int main() {
-    appSpace::App app{};
+    FluidSim::App app{};
     
     try{
         app.run();

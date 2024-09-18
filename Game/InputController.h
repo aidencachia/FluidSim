@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Game/GameObject.h"
-#include "Window.h"
+#include "Objects/GameObject.h"
+#include "../Graphics/Window.h"
 
 namespace graphics{
     class InputController{

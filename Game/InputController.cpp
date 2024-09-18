@@ -1,4 +1,3 @@
-#include <iostream>
 #include "InputController.h"
 
 namespace graphics{

@@ -3,9 +3,9 @@
 #include <iostream>
 #include "App.h"
 #include "glm/gtc/constants.hpp"
-#include "GameObject.h"
+#include "Objects/GameObject.h"
 
-namespace appSpace{
+namespace FluidSim{
     
     App::App() {
         loadGameObjects();
@@ -28,7 +28,7 @@ namespace appSpace{
                 prevTime = nextTime;
                 
                 if(!isPaused) {
-                    for (graphics::gameSpace::GameObject &obj: gameObjects) {
+                    for (GameObject &obj: gameObjects) {
                         obj.update(deltaTimeSecs);
                     }
                 }
@@ -45,13 +45,13 @@ namespace appSpace{
     void App::loadGameObjects() {
         std::shared_ptr<graphics::Model> circleModel = graphics::Model::createCircleModel(device, 64);
         
-        auto ball = graphics::gameSpace::GameObject::createRigidbodyObject();
+        auto ball = GameObject::createRigidbodyObject();
         ball.transform2d.scale = glm::vec2{.15};
         ball.transform2d.translation = {.0, -.5};
         ball.color = {1.f, 0.f, 0.f};
         ball.rigidBody2d.velocity = {.001f, .0f};
         ball.model = circleModel;
-        ball.isInBoundingAreaFunc = [](graphics::gameSpace::GameObject &gameObject, glm::vec2 coords){
+        ball.isInBoundingAreaFunc = [](GameObject &gameObject, glm::vec2 coords){
             float r = gameObject.transform2d.scale.x;
             
             float diffInX = coords.x - gameObject.transform2d.translation.x;
@@ -62,7 +62,7 @@ namespace appSpace{
         ball.transform2d.translation.y = -0.5f;
         gameObjects.push_back(std::move(ball));
 
-        auto line = graphics::gameSpace::GameObject::createLine(device, ball, {0, 0}, 1);
+        auto line = GameObject::createLine(device, ball, {0, 0}, 1);
         line.color = {1.f, 1.f, 1.f};
 
         gameObjects.push_back(std::move(line));
@@ -106,7 +106,7 @@ namespace appSpace{
             
             glm::vec2 newDistance{deltaX, deltaY};
             
-            gameObjects[objectIdToDrag].rigidBody2d.velocity += (newDistance-distanceFromCenter)*glm::vec2{0.05};
+            gameObjects[objectIdToDrag].rigidBody2d.velocity += (newDistance-distanceFromCenter)*glm::vec2{0.1};
         }
     }
     
