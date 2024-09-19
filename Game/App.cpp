@@ -3,8 +3,9 @@
 #include <iostream>
 #include "App.h"
 #include "glm/gtc/constants.hpp"
+#include "Objects/GameObject.h"
 
-namespace appSpace{
+namespace FluidSim{
     
     App::App() {
         loadGameObjects();
@@ -15,8 +16,7 @@ namespace appSpace{
     void App::run() {
         
         graphics::FirstRenderSystem renderSystem{device, renderer.getSwapChainRenderPass()};
-        
-        
+
         auto prevTime = std::chrono::high_resolution_clock::now();
         while (!window.shouldClose()) {
             glfwPollEvents();
@@ -28,9 +28,7 @@ namespace appSpace{
                 prevTime = nextTime;
                 
                 if(!isPaused) {
-                    for (graphics::GameObject &obj: gameObjects) {
-                        obj.update(deltaTimeSecs);
-                    }
+                    gameField.update(deltaTimeSecs);
                 }
                 renderer.beginSwapChainRenderPass(commandBuffer);
                 renderSystem.renderGameObjects(commandBuffer, gameObjects);
@@ -43,29 +41,13 @@ namespace appSpace{
     }
     
     void App::loadGameObjects() {
-        std::shared_ptr<graphics::Model> circleModel = graphics::Model::createCircleModel(device, 64);
-        
-        auto ball = graphics::GameObject::createRigidbodyObject();
-        ball.transform2d.scale = glm::vec2{.15};
-        ball.transform2d.translation = {.0, -.5};
-        ball.color = {1.f, 0.f, 0.f};
-        ball.rigidBody2d.velocity = {.001f, .0f};
-        ball.model = circleModel;
-        ball.isInBoundingAreaFunc = [](graphics::GameObject &gameObject, glm::vec2 coords){
-            float r = gameObject.transform2d.scale.x;
-            
-            float diffInX = coords.x - gameObject.transform2d.translation.x;
-            float diffInY = coords.y - gameObject.transform2d.translation.y;
-            
-            return diffInX*diffInX + diffInY*diffInY <= r*r;
-        };
-        ball.transform2d.translation.y = -0.5f;
-        gameObjects.push_back(std::move(ball));
 
-//        auto line = graphics::GameObject::createLine(device, ball, {0,0}, 1);
-//        line.color = {1.f, 1.f, 1.f};
-//
-//        gameObjects.push_back(std::move(line));
+
+
+        auto line = GameObject::createLine(device, ball, {0, 0}, 1);
+        line.color = {1.f, 1.f, 1.f};
+
+        gameObjects.push_back(std::move(line));
         
     }
     
@@ -106,7 +88,7 @@ namespace appSpace{
             
             glm::vec2 newDistance{deltaX, deltaY};
             
-            gameObjects[objectIdToDrag].rigidBody2d.velocity += (newDistance-distanceFromCenter)*glm::vec2{2};
+            gameObjects[objectIdToDrag].rigidBody2d.velocity += (newDistance-distanceFromCenter)*glm::vec2{0.1};
         }
     }
     

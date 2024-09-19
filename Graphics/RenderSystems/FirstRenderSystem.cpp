@@ -43,7 +43,7 @@ namespace graphics{
         
     }
     
-    void FirstRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects) {
+    void FirstRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<FluidSim::GameObject>& gameObjects) {
         pipeline->bind(commandBuffer);
         
         for(auto& obj: gameObjects) {

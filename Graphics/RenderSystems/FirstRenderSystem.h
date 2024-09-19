@@ -4,7 +4,7 @@
 #include "../Pipeline.h"
 #include "../Device.h"
 #include "../Model.h"
-#include "../GameObject.h"
+#include "../../Game/Objects/GameObject.h"
 
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -29,7 +29,7 @@ namespace graphics{
         FirstRenderSystem(const FirstRenderSystem &) = delete;
         FirstRenderSystem &operator=(const FirstRenderSystem &) = delete;
         
-        void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects);
+        void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<FluidSim::GameObject>& gameObjects);
         
         void run();
     private:

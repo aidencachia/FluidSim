@@ -1,20 +1,21 @@
 #pragma once
 
 #include <memory>
-#include "Graphics/Window.h"
-#include "Graphics/Device.h"
-#include "Graphics/Renderer.h"
-#include "Graphics/Model.h"
-#include "Graphics/RenderSystems/FirstRenderSystem.h"
-#include "Graphics/GameObject.h"
-#include "Graphics/InputController.h"
+#include "../Graphics/Window.h"
+#include "../Graphics/Device.h"
+#include "../Graphics/Renderer.h"
+#include "../Graphics/Model.h"
+#include "../Graphics/RenderSystems/FirstRenderSystem.h"
+#include "Objects/GameObject.h"
+#include "InputController.h"
 
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/glm.hpp"
+#include "GameField.h"
 
 
-namespace appSpace{
+namespace FluidSim{
     
     class App{
     
@@ -42,9 +43,9 @@ namespace appSpace{
         graphics::Window window{WIDTH, HEIGHT, "Ball"};
         graphics::Device device{window};
         graphics::Renderer renderer{window, device};
-        
-        std::vector<graphics::GameObject> gameObjects;
-        
+
+        GameField gameField;
+
         graphics::InputController input{};
         
         int objectIdToDrag;

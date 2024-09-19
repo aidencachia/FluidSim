@@ -18,8 +18,8 @@ endif ()
 add_executable(Fluid_Sim main.cpp
         Graphics/Window.cpp
         Graphics/Window.h
-        App.cpp
-        App.h
+        Game/App.cpp
+        Game/App.h
         Graphics/Pipeline.cpp
         Graphics/Pipeline.h
         Graphics/Device.cpp
@@ -28,13 +28,17 @@ add_executable(Fluid_Sim main.cpp
         Graphics/SwapChain.h
         Graphics/Model.cpp
         Graphics/Model.h
-        Graphics/GameObject.h
+        Game/Objects/GameObject.h
         Graphics/Renderer.h
         Graphics/Renderer.cpp
         Graphics/RenderSystems/FirstRenderSystem.cpp
         Graphics/RenderSystems/FirstRenderSystem.h
-        Graphics/GameObject.cpp
-        Graphics/InputController.cpp
-        Graphics/InputController.h)
+        Game/Objects/GameObject.cpp
+        Game/InputController.cpp
+        Game/InputController.h
+        Game/GameField.cpp
+        Game/GameField.h
+        Game/Objects/Rigidbody.h
+        Game/Objects/Rigidbody.cpp)
 
 target_link_libraries(Fluid_Sim glfw glm ${Vulkan_LIBRARIES})
