@@ -9,16 +9,23 @@ namespace FluidSim{
         
         class Quadtree {
         private:
+            typedef struct bounds{
+                glm::vec2 start;
+                glm::vec2 size;
+            } bounds_t;
             static const int MAX_OBJECTS = 4;  // Max objects before subdivision
             static const int MAX_LEVELS = 5;   // Max depth of the tree
             
             int level;                // Current level
-            Rect bounds;              // Bounding box of this node
+            //Random Primes jic
+            //462577
+            //42193
+            struct bounds bounds;
             std::vector<Rigidbody*> objects; // Rigidbodys in this node
             std::unique_ptr<Quadtree> nodes[4]; // Child nodes
         
         public:
-            Quadtree(int pLevel, const Rect& pBounds)
+            Quadtree(int pLevel, const bounds_t& pBounds)
                     : level(pLevel), bounds(pBounds) {}
             
             // Clear the Quadtree
@@ -34,32 +41,48 @@ namespace FluidSim{
             
             // Split the node into 4 subnodes
             void split() {
-                float subWidth = bounds.width / 2.0f;
-                float subHeight = bounds.height / 2.0f;
-                float x = bounds.x;
-                float y = bounds.y;
+                float subWidth = bounds.size.y / 2.0f;
+                float subHeight = bounds.size.x / 2.0f;
+                float x = bounds.start.x;
+                float y = bounds.start.y;
                 
                 // Top-Left
-                nodes[0] = std::make_unique<Quadtree>(level + 1, Rect(x - subWidth / 2, y - subHeight / 2, subWidth, subHeight));
+                bounds_t boundsTL;
+                boundsTL.start = {x - subWidth / 2, y - subHeight / 2};
+                boundsTL.size = {subWidth, subHeight};
+
+                nodes[0] = std::make_unique<Quadtree>(level + 1, boundsTL);
                 // Top-Right
-                nodes[1] = std::make_unique<Quadtree>(level + 1, Rect(x + subWidth / 2, y - subHeight / 2, subWidth, subHeight));
+                bounds_t boundsTR;
+                boundsTR.start = {x + subWidth / 2, y - subHeight / 2};
+                boundsTR.size = {subWidth, subHeight};
+
+                nodes[1] = std::make_unique<Quadtree>(level + 1, boundsTR);
                 // Bottom-Left
-                nodes[2] = std::make_unique<Quadtree>(level + 1, Rect(x - subWidth / 2, y + subHeight / 2, subWidth, subHeight));
+                bounds_t boundsBL;
+                boundsBL.start = {x - subWidth / 2, y + subHeight / 2};
+                boundsBL.size = {subWidth, subHeight};
+
+                nodes[2] = std::make_unique<Quadtree>(level + 1, boundsBL);
                 // Bottom-Right
-                nodes[3] = std::make_unique<Quadtree>(level + 1, Rect(x + subWidth / 2, y + subHeight / 2, subWidth, subHeight));
+                bounds_t boundsBR;
+                boundsBR.start = {x - subWidth / 2, y - subHeight / 2};
+                boundsBR.size = {subWidth, subHeight};
+
+                nodes[3] = std::make_unique<Quadtree>(level + 1, boundsBR);
             }
             
             // Determine which node the object belongs to
             int getIndex(const Rigidbody* obj) const {
                 int index = -1;
-                double verticalMidpoint = bounds.x;
-                double horizontalMidpoint = bounds.y;
+                double verticalMidpoint = bounds.start.x;
+                double horizontalMidpoint = bounds.start.y;
                 
                 // Rigidbody's position relative to center
-                bool topQuadrant = obj->y < horizontalMidpoint;
-                bool bottomQuadrant = obj->y >= horizontalMidpoint;
-                bool leftQuadrant = obj->x < verticalMidpoint;
-                bool rightQuadrant = obj->x >= verticalMidpoint;
+                bool topQuadrant = obj->transform2d.translation.y < horizontalMidpoint;
+                bool bottomQuadrant = obj->transform2d.translation.y >= horizontalMidpoint;
+                bool leftQuadrant = obj->transform2d.translation.x < verticalMidpoint;
+                bool rightQuadrant = obj->transform2d.translation.x >= verticalMidpoint;
                 
                 if (leftQuadrant) {
                     if (topQuadrant) {
@@ -128,10 +151,17 @@ namespace FluidSim{
                 return returnRigidbodys;
             }
         };
-    
-        std::unordered_map<int, std::list<GameRigidbody&>> objectMap;
+    public:
+        GameField(graphics::Device& device): gameDevice(device) {};
+
+        void createCircleGrid(int size, float elementSize, float padding);
+        void addCircle(float size, glm::vec2 position);
+
+        void update(float deltaTimeSecs);
+
+    private:
+        std::vector<GameObject> objects;
         graphics::Device &gameDevice;
-    
     };
     
 }

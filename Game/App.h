@@ -12,6 +12,7 @@
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/glm.hpp"
+#include "GameField.h"
 
 
 namespace FluidSim{
@@ -21,7 +22,7 @@ namespace FluidSim{
     public:
         static constexpr int WIDTH = 800;
         static constexpr int HEIGHT = 800;
-        static constexpr int GRAVITY = 10;
+        static constexpr float GRAVITY = 9.81;
         
         App();
         ~App();
@@ -42,9 +43,9 @@ namespace FluidSim{
         graphics::Window window{WIDTH, HEIGHT, "Ball"};
         graphics::Device device{window};
         graphics::Renderer renderer{window, device};
-        
-        std::vector<FluidSim::GameObject> gameObjects;
-        
+
+        GameField gameField;
+
         graphics::InputController input{};
         
         int objectIdToDrag;

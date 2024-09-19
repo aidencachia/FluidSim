@@ -17,8 +17,8 @@ namespace FluidSim {
     class Rigidbody: public GameObject{
     public:
         using UpdateBehaviour = std::function<void(Rigidbody&, float)>;
-        
-        static RigidBody2dComponent createRigidbodyObject();
+
+        Rigidbody() = default;
         
         Rigidbody(const Rigidbody&) = delete;
         Rigidbody &operator=(const Rigidbody&) = delete;
@@ -32,11 +32,5 @@ namespace FluidSim {
         glm::vec3 color{};
         std::function<bool(Rigidbody&, glm::vec2)> isInBoundingAreaFunc;
         RigidBody2dComponent rigidBody2d{};
-    
-    private:
-        Rigidbody(UpdateBehaviour updateBehaviour):
-                updateBehaviour{std::move(updateBehaviour)} {}
-        
-        UpdateBehaviour updateBehaviour;
     };
 }

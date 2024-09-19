@@ -19,8 +19,7 @@ namespace FluidSim {
         
         line.transform2d.rotation = theta;
     }
-    
-//
+
 //    GameObject GameObject::createLine(graphics::Device& device, glm::vec2 to, glm::vec2 from,
 //                                                            float stroke) {
 //        GameObject line = createGameObject();
@@ -31,7 +30,7 @@ namespace FluidSim {
 //
 //        return line;
 //    }
-//
+
 //    GameObject GameObject::createLine(graphics::Device &device, glm::vec2 to,
 //                                                            GameObject &from, float stroke) {
 //        GameObject line = createLine(device, to, from.transform2d.translation+from.transform2d.scale, stroke);
@@ -41,7 +40,7 @@ namespace FluidSim {
 //        };
 //        return line;
 //    }
-//
+
 //    GameObject GameObject::createLine(graphics::Device &device, GameObject &to, glm::vec2 from, float stroke) {
 //        return GameObject::createLine(device, from, to, stroke);
 //    }
