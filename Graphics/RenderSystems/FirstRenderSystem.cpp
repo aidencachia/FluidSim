@@ -43,22 +43,49 @@ namespace graphics{
         
     }
     
-    void FirstRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<FluidSim::GameObject>& gameObjects) {
+    void FirstRenderSystem::renderGameField(VkCommandBuffer commandBuffer, FluidSim::GameField& gameField) {
         pipeline->bind(commandBuffer);
-        
-        for(auto& obj: gameObjects) {
-            SimplePushConstantData push{};
-            push.offset = obj.transform2d.translation;
-            push.color = obj.color;
-            
-            glm::mat2 aspectRatioTransform{{1/device.getAspectRatio(),0},{0,1}};
-            
-            push.transform = obj.transform2d.mat2()*aspectRatioTransform;
-            
-            vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT |VK_SHADER_STAGE_FRAGMENT_BIT, 0 ,sizeof(SimplePushConstantData), &push);
-            obj.model->bind(commandBuffer);
-            obj.model->draw(commandBuffer);
+
+        std::vector<FluidSim::GameObject> &gameObjects = gameField.getObjects();
+            for (int i = 0; i < gameObjects.size(); i++) {
+                auto &obj = gameObjects[i];
+
+                SimplePushConstantData push{};
+                push.offset = obj.transform2d.translation;
+                push.color = obj.color;
+
+                glm::mat2 aspectRatioTransform{{1 / device.getAspectRatio(), 0},
+                                               {0,                           1}};
+
+                push.transform = obj.transform2d.mat2() * aspectRatioTransform;
+
+                vkCmdPushConstants(commandBuffer, pipelineLayout,
+                                   VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+                                   sizeof(SimplePushConstantData), &push);
+                obj.model->bind(commandBuffer);
+                obj.model->draw(commandBuffer);
+            }
+
+        std::vector<FluidSim::Rigidbody> &rigidbodies = gameField.getRigidbodies();
+
+            for (int i = 0; i < rigidbodies.size(); i++) {
+                auto &obj = rigidbodies[i];
+
+                SimplePushConstantData push{};
+                push.offset = obj.transform2d.translation;
+                push.color = obj.color;
+
+                glm::mat2 aspectRatioTransform{{1 / device.getAspectRatio(), 0},
+                                               {0,                           1}};
+
+                push.transform = obj.transform2d.mat2() * aspectRatioTransform;
+
+                vkCmdPushConstants(commandBuffer, pipelineLayout,
+                                   VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+                                   sizeof(SimplePushConstantData), &push);
+                obj.model->bind(commandBuffer);
+                obj.model->draw(commandBuffer);
+            }
         }
-    }
     
 }

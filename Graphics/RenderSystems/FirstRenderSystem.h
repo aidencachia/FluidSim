@@ -9,6 +9,7 @@
 #define GLM_FORCE_REDIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include "glm/glm.hpp"
+#include "../../Game/GameField.h"
 
 
 namespace graphics{
@@ -29,7 +30,7 @@ namespace graphics{
         FirstRenderSystem(const FirstRenderSystem &) = delete;
         FirstRenderSystem &operator=(const FirstRenderSystem &) = delete;
         
-        void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<FluidSim::GameObject>& gameObjects);
+        void renderGameField(VkCommandBuffer commandBuffer, FluidSim::GameField& gameField);
         
         void run();
     private:

@@ -31,7 +31,7 @@ namespace FluidSim{
                     gameField.update(deltaTimeSecs);
                 }
                 renderer.beginSwapChainRenderPass(commandBuffer);
-                renderSystem.renderGameObjects(commandBuffer, gameObjects);
+                renderSystem.renderGameField(commandBuffer, gameField);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();
             }
@@ -41,19 +41,17 @@ namespace FluidSim{
     }
     
     void App::loadGameObjects() {
+//        gameField.addCircle(
+//                .15,
+//                {.0, -.5},
+//                {1.f, 0.f, 0.f});
 
-
-
-        auto line = GameObject::createLine(device, ball, {0, 0}, 1);
-        line.color = {1.f, 1.f, 1.f};
-
-        gameObjects.push_back(std::move(line));
-        
+        gameField.createCircleGrid(20, 0.1, 0.02, {0.3, .08, 1});
     }
     
     void App::reset() {
         vkDeviceWaitIdle(device.device());
-        gameObjects.clear();
+        gameField.clear();
         loadGameObjects();
     }
     
@@ -61,41 +59,10 @@ namespace FluidSim{
         isPaused = !isPaused;
     }
     
-    void App::dragObject() {
-        glm::vec2 currentCursorPos = window.getCursorPos();
-        if(input.isToStartDragging()){
-            bool found = false;
-            for (int i = 0; i < gameObjects.size() && !found; i++){
-                
-                if(gameObjects[i].isInBoundingArea(currentCursorPos)){
-                    found = true;
-                    objectIdToDrag = i;
-                    
-                    float deltaX = currentCursorPos.x - (gameObjects[i].transform2d.translation.x+gameObjects[i].transform2d.scale.x);
-                    float deltaY = currentCursorPos.y - (gameObjects[i].transform2d.translation.y+gameObjects[i].transform2d.scale.y);
-                    
-                    distanceFromCenter = {deltaX, deltaY};
-                }
-            }
-            
-            if(!found){
-                objectIdToDrag = -1;
-            }
-        }
-        if(objectIdToDrag != -1){
-            float deltaX = currentCursorPos.x - (gameObjects[objectIdToDrag].transform2d.translation.x+gameObjects[objectIdToDrag].transform2d.scale.x);
-            float deltaY = currentCursorPos.y - (gameObjects[objectIdToDrag].transform2d.translation.y+gameObjects[objectIdToDrag].transform2d.scale.y);
-            
-            glm::vec2 newDistance{deltaX, deltaY};
-            
-            gameObjects[objectIdToDrag].rigidBody2d.velocity += (newDistance-distanceFromCenter)*glm::vec2{0.1};
-        }
-    }
-    
     void App::registerInput(){
         input.update(window.getGLFWwindow());
         if(input.isToReset()) reset();
         if(input.isToTogglePause()) pause();
-        if(input.isToDrag()) dragObject();
+        if(input.isToDrag()) gameField.dragObject(window.getCursorPos(), input.isToStartDragging());
     }
 }

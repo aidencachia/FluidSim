@@ -152,16 +152,31 @@ namespace FluidSim{
             }
         };
     public:
-        GameField(graphics::Device& device): gameDevice(device) {};
+        GameField(graphics::Device& device): gameDevice(device) { };
 
-        void createCircleGrid(int size, float elementSize, float padding);
-        void addCircle(float size, glm::vec2 position);
+        GameField(const GameField&) = delete;
+        GameField &operator=(const GameField&) = delete;
+        GameField(GameField &&) = default;
+        GameField &operator=(GameField &&) =default;
 
-        void update(float deltaTimeSecs);
+        void createCircleGrid(int size, float elementSize, float padding, glm::vec3 color);
+        void addCircle(float size, glm::vec2 position, glm::vec3 color);
+
+        void update(float deltaTimeSecs) { for( Rigidbody& rigidbody: rigidbodies) rigidbody.update(deltaTimeSecs); };
+        void clear();
+
+        void dragObject(glm::vec2 cursorPos, bool startDragging);
+
+        std::vector<GameObject>& getObjects();
+        std::vector<Rigidbody>& getRigidbodies();
 
     private:
+        std::vector<Rigidbody> rigidbodies;
         std::vector<GameObject> objects;
-        graphics::Device &gameDevice;
+        graphics::Device& gameDevice;
+
+        int objectIdToDrag;
+        glm::vec2 distanceFromCenter;
     };
     
 }

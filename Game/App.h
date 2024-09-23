@@ -35,7 +35,6 @@ namespace FluidSim{
         void pause();
         
         void registerInput();
-        void dragObject();
         
     private:
         void loadGameObjects();
@@ -44,12 +43,9 @@ namespace FluidSim{
         graphics::Device device{window};
         graphics::Renderer renderer{window, device};
 
-        GameField gameField;
+        GameField gameField{device};
 
         graphics::InputController input{};
-        
-        int objectIdToDrag;
-        glm::vec2 distanceFromCenter;
         
         bool isPaused{};
     };
